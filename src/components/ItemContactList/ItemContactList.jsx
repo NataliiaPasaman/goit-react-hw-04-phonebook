@@ -5,16 +5,15 @@ import css from "components/ItemContactList/ItemContactList.module.css";
 export const ItemContactList = ({ contacts, deleteContact }) => {
   
   const addContactItem = contacts => {
-
-    return contacts.map(contact => {
+    return contacts.map(({ id, name, number }) => {
       return (
-        <li className={css.contacts__item} key={contact.id}>
-          {contact.name}:
-          <span className={css.contacts__number}> {contact.number}</span>
+        <li className={css.contacts__item} key={id}>
+          {name}:
+          <span className={css.contacts__number}> {number}</span>
           <button
             type="button"
             className={css.btnDelete}
-            onClick={() => deleteContact(contact.id)}
+            onClick={() => deleteContact(id)}
             >
             Delete
           </button>
