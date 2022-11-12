@@ -1,33 +1,20 @@
 import { nanoid } from 'nanoid';
-import { ContactForm } from "./ContactForm/ContactForm";
-import { Filter } from "./Filter/Filter";
-import { ContactsList } from "./ContactsList/ContactsList";
-import { useState } from 'react';
+import { ContactForm } from './ContactForm/ContactForm';
+import { Filter } from './Filter/Filter';
+import { ContactsList } from './ContactsList/ContactsList';
+import { useState, useEffect } from 'react';
 
-const CONTACTS = 'contacts';
+const CONTACTS = 'contacts_List';
 
 export const App = () => {
-  const [contacts, setContacts] = useState([]);
+  const [contacts, setContacts] = useState((() => {
+      return JSON.parse(localStorage.getItem(CONTACTS));
+    }) ?? []);
   const [filter, setFilter] = useState('');
 
-  
-
-  // componentDidMount() {
-  //   const contactString = localStorage.getItem(CONTACTS);
-  //   const contactParsed = JSON.parse(contactString);
-
-  //   if(contactParsed) {
-  //     return this.setState({ contacts: contactParsed });
-  //   }
-  // }
-
-  // componentDidUpdate(prevState) {
-  //   const { contacts } = this.state;
-
-  //   if (prevState.contacts !== contacts) {
-  //     localStorage.setItem(CONTACTS, JSON.stringify(contacts));
-  //   }
-  // }
+  useEffect(() => {
+    localStorage.setItem(CONTACTS, JSON.stringify(contacts));
+  }, [contacts]);
 
   const hadleSubmit = (name, number) => {
     const contact = {
@@ -36,17 +23,17 @@ export const App = () => {
       number,
     };
 
-    const isfindContact = contacts.find(oneContact => oneContact.name === contact.name);
+    const isfindContact = contacts.find(
+      oneContact => oneContact.name === contact.name
+    );
     if (isfindContact) {
       alert(`${contact.name} is already in contacts`);
       return;
-    };
+    }
     setContacts(prevState => [contact, ...prevState]);
   };
 
-  const onInputFilterChange = e => {
-    setFilter(e.target.value);
-  };
+  const onInputFilterChange = e => setFilter(e.target.value);
 
   const getFilterContacts = () => {
     const normalizedFilter = filter.toLowerCase();
@@ -59,27 +46,24 @@ export const App = () => {
     setContacts(prevState => prevState.filter(contact => contact.id !== id));
   };
 
-    return (
-      <div
-        style={{
-          height: '100vh',
-          padding: '40px',
-          fontSize: 40,
-          color: '#010101',
-        }}
-      >
-        <h1>Phonebook</h1>
-        <ContactForm hadleSubmit={hadleSubmit} />
-        <h2>Contacts</h2>
-        <Filter
-          onInputFilterChange={onInputFilterChange}
-          filter={filter}
-        />
-        <ContactsList
-          FilterContact={getFilterContacts()}
-          deleteContact={deleteContact}
-          contacts={contacts}
-        />
-      </div>
-    );
+  return (
+    <div
+      style={{
+        height: '100vh',
+        padding: '40px',
+        fontSize: 40,
+        color: '#010101',
+      }}
+    >
+      <h1>Phonebook</h1>
+      <ContactForm hadleSubmit={hadleSubmit} />
+      <h2>Contacts</h2>
+      <Filter onInputFilterChange={onInputFilterChange} filter={filter} />
+      <ContactsList
+        FilterContact={getFilterContacts()}
+        deleteContact={deleteContact}
+        contacts={contacts}
+      />
+    </div>
+  );
 };
