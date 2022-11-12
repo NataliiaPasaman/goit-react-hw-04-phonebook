@@ -41,6 +41,7 @@ export const App = () => {
       contact.name.toLowerCase().includes(normalizedFilter)
     );
   };
+  const filterContacts = getFilterContacts();
 
   const deleteContact = id => {
     setContacts(prevState => prevState.filter(contact => contact.id !== id));
@@ -60,7 +61,7 @@ export const App = () => {
       <h2>Contacts</h2>
       <Filter onInputFilterChange={onInputFilterChange} filter={filter} />
       <ContactsList
-        FilterContact={getFilterContacts()}
+        FilterContact={filterContacts}
         deleteContact={deleteContact}
         contacts={contacts}
       />
