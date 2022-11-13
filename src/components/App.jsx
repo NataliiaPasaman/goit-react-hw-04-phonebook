@@ -7,9 +7,11 @@ import { useState, useEffect } from 'react';
 const CONTACTS = 'contacts_List';
 
 export const App = () => {
-  const [contacts, setContacts] = useState((() => {
-      return JSON.parse(localStorage.getItem(CONTACTS));
-    }) ?? []);
+  const savedContacts = () => {
+    return JSON.parse(localStorage.getItem(CONTACTS)) || [];
+  }
+
+  const [contacts, setContacts] = useState(savedContacts);
   const [filter, setFilter] = useState('');
 
   useEffect(() => {
